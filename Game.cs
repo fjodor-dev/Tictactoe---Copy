@@ -26,13 +26,13 @@ namespace Tictactoe
             while(true)
             {
 
+                if (turnCount % 2 == 0 && CheckWin(arr))
+                {
+                    message = $"player 2 has won!";
+                    break;
+                }
                 if (CheckWin(arr))
                 {
-                    if (turnCount % 2 == 0)
-                    { 
-                        message = $"player 2 has won!";
-                        break;
-                    }
                     message = $"player 1 has won!";
                     break;
                 }
@@ -41,36 +41,29 @@ namespace Tictactoe
                     message = $"draw!";
                     break;
                 }
-                 
+                
                 if (turnCount % 2 == 0)
                 {
                     icon = player1Char;
-                    //Console.WriteLine(AI(false) + 1);
                     input((AI(false) + 1), icon);
-
-                    Console.WriteLine(Print(arr));
-                    Console.WriteLine($"turnCount = {turnCount}");
-                    Console.WriteLine(message);
-
-                    Thread.Sleep(3000);
+                    //Console.WriteLine(Print(arr));
+                    //Console.WriteLine($"turnCount = {turnCount}");
+                    //Console.WriteLine(message);
+                    //Thread.Sleep(3000);
                     continue;
                 }
-                else
-                {
-                    //    Console.WriteLine(AI(true)+1);
-                    Console.Clear();
-                    icon = player2Char;
-                    input((AI(true) + 1), icon);
+                //else
+                //{
+                //    icon = player2Char;
+                //    input((AI(true) + 1), icon);
+                //    Console.WriteLine(Print(arr));
+                //    Console.WriteLine($"turnCount = {turnCount}");
+                //    Console.WriteLine(message);
+                //    Thread.Sleep(3000);
+                //    continue;
+                //}
 
-                    Console.WriteLine(Print(arr));
-                    Console.WriteLine($"turnCount = {turnCount}");
-                    Console.WriteLine(message);
-
-                    Thread.Sleep(3000);
-                    continue;
-                }
-                //icon = player2Char;
-
+                icon = player2Char;
                 Console.WriteLine(Print(arr));
                 Console.WriteLine(message);
                 Console.WriteLine($"turnCount = {turnCount}");
@@ -82,6 +75,7 @@ namespace Tictactoe
                     continue;
                 }
                 input(key, icon);
+                Console.Clear();
             }
 
             Console.Clear();
