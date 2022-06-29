@@ -4,8 +4,8 @@
  made with the help of this video:
  https://www.youtube.com/watch?v=l-hh51ncgDI
  
- here is the result:
- video of result
+ here a display of the result in the console:
+https://youtu.be/r2GV3lve454
  
  
 the ai that calss the minimax method
