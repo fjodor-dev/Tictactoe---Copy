@@ -9,7 +9,7 @@ namespace Tictactoe
     internal class Game
     {
         private char[] arr = new char[9];
-        private char icon = ' ', player1Char = '-', player2Char = '+';
+        private char icon = ' ', player1Char = '+', player2Char = '-';
         private int turnCount = 0, minmaxCallCount = 0;
         Random random = new Random();
 
@@ -45,16 +45,29 @@ namespace Tictactoe
                 if (turnCount % 2 == 0)
                 {
                     icon = player1Char;
-                    Console.WriteLine(AI(false) + 1);
-                    //input((AI(false) + 1), icon);
-                    //continue;
+                    //Console.WriteLine(AI(false) + 1);
+                    input((AI(false) + 1), icon);
+
+                    Console.WriteLine(Print(arr));
+                    Console.WriteLine($"turnCount = {turnCount}");
+                    Console.WriteLine(message);
+
+                    Thread.Sleep(3000);
+                    continue;
                 }
                 else
                 {
-                //    Console.WriteLine(AI(true)+1);
+                    //    Console.WriteLine(AI(true)+1);
+                    Console.Clear();
                     icon = player2Char;
-                    Console.WriteLine(AI(true) + 1);
-                    //    //input((AI(true) + 1), icon);
+                    input((AI(true) + 1), icon);
+
+                    Console.WriteLine(Print(arr));
+                    Console.WriteLine($"turnCount = {turnCount}");
+                    Console.WriteLine(message);
+
+                    Thread.Sleep(3000);
+                    continue;
                 }
                 //icon = player2Char;
 
@@ -69,7 +82,6 @@ namespace Tictactoe
                     continue;
                 }
                 input(key, icon);
-                Console.Clear();
             }
 
             Console.Clear();
@@ -120,9 +132,8 @@ namespace Tictactoe
         private int AI(bool minimize)
         {
             minmaxCallCount = 0;
-            int bestIndex = 0;
+            int bestIndex = 0, bestEval = 0;
             int[] positions = new int[arr.Length];
-            int bestEval = 0;
 
             if (minimize)
             {
@@ -135,28 +146,24 @@ namespace Tictactoe
                 bestEval = -1000;
             }
 
-            for (int i = 0; i < arr.Length; i++)
+            for (int i = 0; i < positions.Length; i++)
             {
                 if (arr[i] == ' ')
                 {
-                    Console.WriteLine("original:");
-                    Console.WriteLine(Print(arr));
+                    //Console.WriteLine("original:");
+                    //Console.WriteLine(Print(arr));
                     char[] newboardCopy = (char[])arr.Clone();
                     newboardCopy[i] = icon;
 
                     positions[i] = MiniMax(newboardCopy, minimize);
-                    Console.WriteLine("=============================");
+                    //Console.WriteLine("=============================");
 
                     Console.WriteLine($" position {i + 1}: {positions[i]}");
 
-                    if (minimize && bestEval > positions[i])
-                    {
-                        bestEval = positions[i];
-                    }
-                    else if(!minimize && bestEval < positions[i])
-                    {
-                        bestEval = positions[i];
-                    }
+                    if (minimize && bestEval > positions[i]) bestEval = positions[i];
+
+                    else if (!minimize && bestEval < positions[i]) bestEval = positions[i];
+
                     continue;
                 }
                 Console.WriteLine($" position {i + 1}: #");
@@ -174,96 +181,105 @@ namespace Tictactoe
                     Console.Write($"{positionsBestEval.Last() + 1}, ");
                 }
             }
-            
+
             bestIndex = positionsBestEval[random.Next(0, positionsBestEval.Count())];
 
             Console.WriteLine();
             Console.WriteLine();
             Console.WriteLine($"best eval: {bestEval}");
-            Console.WriteLine($"use of recursion: {minmaxCallCount-1}");
+            Console.WriteLine($"use of recursion: {minmaxCallCount - 1}");
             Console.WriteLine($"random optimal position: {bestIndex + 1}");
             return bestIndex;
         }
+        //private int AI(bool minimize)
+        //{
+        //    minmaxCallCount = 0;
+        //    int bestEval;
+        //    int[] positions = new int[arr.Length];
+        //    List<int> positionsBestEval = new List<int>();
+
+        //    if (minimize) bestEval = 1000;
+
+        //    else bestEval = -1000;
+
+        //    for (int i = 0; i < positions.Length; i++)
+        //    {
+        //        if (arr[i] != ' ') continue;
+
+        //        char[] newboardCopy = (char[])arr.Clone();
+        //        newboardCopy[i] = icon;
+
+        //        positions[i] = MiniMax(newboardCopy, minimize);
+
+        //        if (minimize && bestEval > positions[i]) 
+        //            bestEval = positions[i];
+
+        //        else if (!minimize && bestEval < positions[i])
+        //            bestEval = positions[i];
+        //    }
+        //    //choose random index where eval == bestEval
+        //    for (int i = 0; i < positions.Length; i++)
+        //    {
+        //        if (positions[i] == bestEval && arr[i] == ' ') positionsBestEval.Add(i);
+        //    }
+        //    return positionsBestEval[random.Next(0, positionsBestEval.Count())];
+        //}
 
 
         private int MiniMax(char[] boardCopy, bool maximize)
         {
             minmaxCallCount++;
 
-            Console.WriteLine(Print(boardCopy));
-
-            if (CheckWin(boardCopy)&&maximize)
-            {
-                Console.WriteLine($"win for maximizing player: ({player2Char}):, return -1");
-                return -1;
-            }
-            if (CheckWin(boardCopy) && !maximize)
-            {
-                Console.WriteLine($"win for minimizing player: ({player1Char}):, return 1");
-                return 1;
-            }
-            bool emtyPlace = false;
-            for (int i = 0; i < 9; i++)
-            {
-                if (boardCopy[i] == ' ')
-                {
-                    emtyPlace = true;
-                    break;
-                }
-            }
-
-            if (!emtyPlace) return 0;
-
-            int endResult;
-
-            //Console.WriteLine();
             //Console.WriteLine(Print(boardCopy));
+
+            if (maximize && CheckWin(boardCopy)) return -1; //Console.WriteLine($"win for maximizing player: ({player2Char}):, return -1");
+                                                             
+            if (!maximize && CheckWin(boardCopy)) return 1; //Console.WriteLine($"win for minimizing player: ({player1Char}):, return 1");
+
+            bool emtyPlace = false;
+            int endResult;
 
             if (maximize)
             {
                 endResult = -1000;
                 for (int i = 0; i < 9; i++)
                 {
-                    if (boardCopy[i] == ' ')
-                    {
-                        
-                        char[] newboardCopy = (char[])boardCopy.Clone();
-                        newboardCopy[i] = player1Char;
+                    if (boardCopy[i] != ' ') continue;
+                    
+                    emtyPlace = true;
 
-                        Console.WriteLine("maximize");
+                    char[] newboardCopy = (char[])boardCopy.Clone();
+                    newboardCopy[i] = player1Char;
 
-                        int newResult = MiniMax(newboardCopy, false);
+                    //Console.WriteLine("maximize");
 
-                        if (newResult > endResult)
-                        {
-                            endResult = newResult;
-                        }
-                    }
+                    int newResult = MiniMax(newboardCopy, false);
+
+                    if (newResult > endResult) endResult = newResult;
                 }
-                return endResult;
             }
-
-            endResult = 1000;
-            for (int i = 0; i < 9; i++)
+            else
             {
-                if (boardCopy[i] == ' ')
+                endResult = 1000;
+                for (int i = 0; i < 9; i++)
                 {
-                        
+                    if (boardCopy[i] != ' ') continue;
+                    
+                    emtyPlace = true;
+
                     char[] newboardCopy = (char[])boardCopy.Clone();
                     newboardCopy[i] = player2Char;
 
-                    Console.WriteLine("minimize");
+                    //Console.WriteLine("minimize");
 
                     int newResult = MiniMax(newboardCopy, true);
 
-                    if (newResult < endResult)
-                    {
-                        endResult = newResult;
-                    }
+                    if (newResult < endResult) endResult = newResult;
                 }
             }
+            if (!emtyPlace) return 0;
+
             return endResult;
-            
         }
 
        private string Print(char[] arr)
