@@ -181,7 +181,7 @@ namespace Tictactoe
             Console.WriteLine();
             Console.WriteLine();
             Console.WriteLine($"best eval: {bestEval}");
-            Console.WriteLine($"use of recursion: {minmaxCallCount - 1}");
+            Console.WriteLine($"minimax calls: {minmaxCallCount}");
             Console.WriteLine($"random optimal position: {bestIndex + 1}");
             return bestIndex;
         }
